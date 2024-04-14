@@ -1,13 +1,30 @@
-from fastapi import FastAPI
+from contextlib import asynccontextmanager
 
-app = FastAPI()
+from fastapi import FastAPI, APIRouter, Depends
 
-#
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+import auth_app
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@asynccontextmanager
+async def lifespan(_: FastAPI):
+    yield
+
+
+app = FastAPI(
+    title="Wonder Land Api",
+    lifespan=lifespan
+)
+
+secured_router = APIRouter(
+    dependencies=[Depends(auth_app.get_current_active_user)]
+)
+
+api_router = APIRouter(
+    prefix="/api",
+    # dependencies=[Depends(auth_app.auth_secure)]
+
+)
+api_router.include_router(auth_app.router)
+app.include_router(secured_router)
+app.include_router(api_router)
+
