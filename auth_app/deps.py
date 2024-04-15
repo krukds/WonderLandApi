@@ -6,8 +6,8 @@ from pydantic import ValidationError
 from starlette import status
 
 from config import config
-from db import UserService, UserModel, SessionModel
-from db.services.sessions_service import SessionService
+from db import UserModel, SessionModel
+from db.services import UserService, SessionService
 from utils import datetime_now
 from .routes import oauth2_scheme
 from .schemes import TokenPayload

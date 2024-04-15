@@ -4,7 +4,7 @@ from jose import jwt
 
 from config import config
 from db import UserModel, SessionModel
-from db.services.sessions_service import SessionService
+from db.services import SessionService
 from utils import datetime_now, timestamp_now
 
 

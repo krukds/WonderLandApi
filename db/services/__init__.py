@@ -1,2 +1,1 @@
-from .users_service import UserService
-from .sessions_service import SessionService
+from .main_services import UserService, SessionService

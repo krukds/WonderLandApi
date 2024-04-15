@@ -6,7 +6,6 @@ from starlette import status
 from db import UserModel
 from db.services import UserService
 from .schemes import TokenResponse, SignupPayload, LoginPayload
-from .utils import create_user_session
 
 router = APIRouter(
     prefix="/auth",
