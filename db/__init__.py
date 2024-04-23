@@ -1,1 +1,2 @@
-from .models import UserModel, SessionModel
+from .models import (UserModel, SessionModel, AttractionModel, AttractionTicketModel, EventModel, EventTicketModel,
+                     RestaurantModel, CuisineModel)

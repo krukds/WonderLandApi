@@ -9,4 +9,16 @@ engine = create_async_engine(DATABASE_URL)
 
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
 
-Base = declarative_base()
+base = declarative_base()
+
+
+class Base(base):
+    __abstract__ = True
+
+    def dict(self, exclude: list = None) -> dict:
+        if exclude is None:
+            exclude = []
+        data = self.__dict__.copy()
+        for item in exclude:
+            del data[item]
+        return data

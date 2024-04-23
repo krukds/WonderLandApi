@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Type, List
+from typing import TypeVar, Generic, Type, List, Any
 
 from sqlalchemy import select, func, update, insert, delete
 
@@ -8,6 +8,12 @@ T = TypeVar('T')
 class BaseService(Generic[T]):
     session_maker: Type[T] = None
     model: Type[T] = None
+
+    @classmethod
+    async def execute(cls, query) -> Any:
+        async with cls.session_maker() as session:
+            result = await session.execute(query)
+            return result.scalars()
 
     @classmethod
     async def select_one(cls, *args_filters, **filters) -> T:
@@ -20,7 +26,7 @@ class BaseService(Generic[T]):
     async def select(cls, *args_filters, order_by=None, **filters) -> List[T]:
         async with cls.session_maker() as session:
             query = select(cls.model).where(*args_filters).filter_by(**filters)
-            if order_by:
+            if order_by is not None:
                 query = query.order_by(order_by)
             result = await session.execute(query)
             return result.scalars()
@@ -33,16 +39,9 @@ class BaseService(Generic[T]):
             await session.commit()
             return obj
 
-    @classmethod
-    async def insert(cls, **data) -> bool:
-        async with cls.session_maker() as session:
-            query = insert(cls.model).values(**data)
-            await session.execute(query)
-            await session.commit()
-            return True
 
     @classmethod
-    async def save(cls, obj: T) -> bool:
+    async def save(cls, obj: T) -> T:
         async with cls.session_maker() as session:
             session.add(obj)
             await session.commit()
@@ -62,7 +61,6 @@ class BaseService(Generic[T]):
 
     @classmethod
     async def delete(cls, **filter_by) -> bool:
-        """Производит удаление"""
         async with cls.session_maker() as session:
             query = delete(cls.model).filter_by(**filter_by)
             await session.execute(query)

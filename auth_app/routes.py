@@ -1,11 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import ValidationError
 from starlette import status
+from starlette.status import HTTP_404_NOT_FOUND
 
 from db import UserModel
-from db.services import UserService
-from .schemes import TokenResponse, SignupPayload, LoginPayload
+from db.services import (UserService, AttractionTicketService, EventTicketService, SessionService,
+                         RestaurantTableBookingService, AttractionReviewService)
+from .deps import get_current_active_user
+from .schemes import TokenResponse, SignupPayload, UserResponse, UserPayload
 from .utils import create_user_session
 
 router = APIRouter(
@@ -13,17 +16,13 @@ router = APIRouter(
     tags=["Authorization"]
 )
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/api/auth/login"
-)
-
 
 @router.post("/login")
 async def login(
-        payload: LoginPayload = Depends()
+        payload: OAuth2PasswordRequestForm = Depends()
 ) -> TokenResponse:
     user = await UserService.select_one(
-        UserModel.email == payload.email,
+        UserModel.email == payload.username,
         UserModel.password == payload.password,
     )
 
@@ -70,3 +69,40 @@ async def signup(
         access_token=session.access_token,
         refresh_token=None
     )
+
+
+@router.get("/me")
+async def get_me(
+        user: UserModel = Depends(get_current_active_user)
+) -> UserResponse:
+    return UserResponse(**user.dict())
+
+
+@router.delete("/me")
+async def delete_me(
+        user: UserModel = Depends(get_current_active_user)
+):
+    # await AttractionReviewService.delete(user_id=user.id)
+    # await RestaurantTableBookingService.delete(user_id=user.id)
+    # await AttractionTicketService.delete(user_id=user.id)
+    # await EventTicketService.delete(user_id=user.id)
+    # await SessionService.delete(user_id=user.id)
+    await UserService.delete(id=user.id)
+    return {"status": "ok"}
+
+@router.put("/me")
+async def update_me(
+        payload: UserPayload,
+        user: UserModel = Depends(get_current_active_user)
+) -> UserResponse:
+    user: UserModel = await UserService.select_one(
+        UserModel.id == user.id
+    )
+    if not user:
+        raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="No user with this id found")
+
+    for key, value in payload.model_dump().items():
+        setattr(user, key, value)
+
+    updated_user = await UserService.save(user)
+    return UserResponse(**updated_user.__dict__)

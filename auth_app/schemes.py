@@ -9,7 +9,7 @@ class TokenPayload(BaseModel):
 
 
 class LoginPayload(BaseModel):
-    email: str
+    username: str
     password: str
 
 
@@ -19,9 +19,24 @@ class SignupPayload(BaseModel):
     first_name: str
     last_name: str
     phone: str
-    role: int = 1
 
 
 class TokenResponse(BaseModel):
     access_token: str
     refresh_token: Optional[str]
+
+
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    password: str
+    first_name: str
+    last_name: str
+    phone: str
+
+class UserPayload(BaseModel):
+    email: str
+    password: str
+    first_name: str
+    last_name: str
+    phone: str

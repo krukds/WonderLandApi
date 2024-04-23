@@ -16,7 +16,6 @@ class UserModel(Base):
     first_name = Column(String(255))
     last_name = Column(String(255))
     phone = Column(String(255))
-    role = Column(Integer)
 
     def __repr__(self) -> str:
         return (
@@ -59,35 +58,38 @@ class LocationModel(Base):
     name = Column(String(255), nullable=False)
 
 
-class AttractionTicket(Base):
+class AttractionTicketModel(Base):
     __tablename__ = 'attraction_ticket'
     id = Column(Integer, primary_key=True)
     attraction_id = Column(Integer, ForeignKey('attraction.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    isExpired = Column(Boolean, default=False, nullable=False)
+    is_expired = Column(Boolean, default=False, nullable=False)
     created_at = Column(DateTime, nullable=False)
 
 
-class Event(Base):
+class EventModel(Base):
     __tablename__ = 'event'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     description = Column(String, nullable=True)
     start_at = Column(DateTime, nullable=False)
     end_at = Column(DateTime, nullable=False)
+    price = Column(Integer, nullable=False)
+    photo_url = Column(String(255), nullable=False)
+    location_id = Column(Integer, ForeignKey('location.id'), nullable=False)
     __table_args__ = (CheckConstraint('start_at < end_at', name='chk_time'),)
 
 
-class EventTicket(Base):
+class EventTicketModel(Base):
     __tablename__ = 'event_ticket'
     id = Column(Integer, primary_key=True)
     event_id = Column(Integer, ForeignKey('event.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
-    isExpired = Column(Boolean, default=False, nullable=False)
-    created_at = Column(Date, nullable=False)
+    is_expired = Column(Boolean, default=False, nullable=False)
+    created_at = Column(DateTime, nullable=False)
 
 
-class AttractionReview(Base):
+class AttractionReviewModel(Base):
     __tablename__ = 'attraction_review'
     id = Column(Integer, primary_key=True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
@@ -97,47 +99,46 @@ class AttractionReview(Base):
     rating = Column(Integer, CheckConstraint('rating >= 1 AND rating <= 5'))
 
 
-class Tag(Base):
+class TagModel(Base):
     __tablename__ = 'tag'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
 
 
-class AttractionTag(Base):
+class AttractionTagModel(Base):
     __tablename__ = 'attraction_tag'
     id = Column(Integer, primary_key=True)
     attraction_id = Column(Integer, ForeignKey('attraction.id'), nullable=False)
     tag_id = Column(Integer, ForeignKey('tag.id'), nullable=False)
-    __table_args__ = (UniqueConstraint('attraction_id', 'tag_id'))
+    __table_args__ = (UniqueConstraint('attraction_id', 'tag_id'),)
 
 
-class Age(Base):
+class AgeModel(Base):
     __tablename__ = 'age'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
 
 
-class AttractionAge(Base):
+class AttractionAgeModel(Base):
     __tablename__ = 'attraction_age'
     id = Column(Integer, primary_key=True)
     attraction_id = Column(Integer, ForeignKey('attraction.id'), nullable=False)
     age_id = Column(Integer, ForeignKey('age.id'), nullable=False)
-    __table_args__ = (UniqueConstraint('attraction_id', 'age_id'))
+    __table_args__ = (UniqueConstraint('attraction_id', 'age_id'),)
 
 
-class Cuisine(Base):
+class CuisineModel(Base):
     __tablename__ = 'cuisine'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True, nullable=False)
 
 
-class Restaurant(Base):
+class RestaurantModel(Base):
     __tablename__ = 'restaurant'
     id = Column(Integer, primary_key=True)
     name = Column(String(255), nullable=False)
     phone = Column(String(50))
     description = Column(String)
-    cuisine_id = Column(Integer, ForeignKey('cuisine.id'))
     location_id = Column(Integer, ForeignKey('location.id'))
     open_at = Column(Time, nullable=False)
     close_at = Column(Time, nullable=False)
@@ -145,29 +146,29 @@ class Restaurant(Base):
     __table_args__ = (CheckConstraint('open_at < close_at', name='chk_times'),)
 
 
-class RestaurantPhoto(Base):
+class RestaurantPhotoModel(Base):
     __tablename__ = 'restaurant_photo'
     id = Column(Integer, primary_key=True)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
     url = Column(String(255), nullable=False)
 
 
-class RestaurantCuisine(Base):
+class RestaurantCuisineModel(Base):
     __tablename__ = 'restaurant_cuisine'
     id = Column(Integer, primary_key=True)
     cuisine_id = Column(Integer, ForeignKey('cuisine.id'), nullable=False)
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
-    __table_args__ = (UniqueConstraint('cuisine_id', 'restaurant_id'))
+    __table_args__ = (UniqueConstraint('cuisine_id', 'restaurant_id'),)
 
 
-class RestaurantTable(Base):
+class RestaurantTableModel(Base):
     __tablename__ = 'restaurant_table'
     id = Column(Integer, primary_key=True)
     capacity = Column(Integer, CheckConstraint('capacity > 0'))
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'), nullable=False)
 
 
-class RestaurantTableBooking(Base):
+class RestaurantTableBookingModel(Base):
     __tablename__ = 'restaurant_table_booking'
     id = Column(Integer, primary_key=True)
     table_id = Column(Integer, ForeignKey('restaurant_table.id'), nullable=False)

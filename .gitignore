@@ -1,5 +1,5 @@
 *.ipynb
-test*
+fill_database.py
 *.session
 *csv
 

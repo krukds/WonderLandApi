@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import Depends, HTTPException
+from fastapi.security import OAuth2PasswordBearer
 from jose import jwt
 from pydantic import ValidationError
 from starlette import status
@@ -9,12 +10,16 @@ from config import config
 from db import UserModel, SessionModel
 from db.services import UserService, SessionService
 from utils import datetime_now
-from .routes import oauth2_scheme
 from .schemes import TokenPayload
+
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="/api/auth/login"
+)
 
 
 async def get_current_active_user(token: str = Depends(oauth2_scheme)) -> UserModel:
     try:
+        print(token)
         payload = jwt.decode(
             token, config.JWT_SECRET_KEY.get_secret_value(), algorithms=[config.ALGORITHM]
         )
