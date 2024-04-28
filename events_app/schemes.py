@@ -29,3 +29,15 @@ class EventResponse(BaseModel):
     photo_url: str
     location_id: int
 
+
+class EventDetailResponse(BaseModel):
+    id: int
+    name: str
+    description: str
+    start_at: str
+    end_at: str
+    price: int
+    photo_url: str
+    location: str
+
+

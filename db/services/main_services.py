@@ -1,91 +1,130 @@
-from db.base import async_session_maker
+from db.base import user_async_session_maker, manager_async_session_maker, admin_async_session_maker
 from db.models import (UserModel, SessionModel, AttractionModel, AttractionTicketModel, EventTicketModel,
                        EventModel, RestaurantModel, TagModel, AttractionTagModel, LocationModel, AgeModel,
                        AttractionAgeModel, RestaurantCuisineModel, RestaurantPhotoModel, CuisineModel,
-                       AttractionReviewModel, RestaurantTableBookingModel)
+                       AttractionReviewModel, RestaurantTableBookingModel, LoggingModel)
 from db.services.base_service import BaseService
 
 
-class UserService(BaseService[UserModel]):
+class UserServiceForManager(BaseService[UserModel]):
     model = UserModel
-    session_maker = async_session_maker
+    session_maker = manager_async_session_maker
 
 
-class SessionService(BaseService[SessionModel]):
+class SessionServiceForManager(BaseService[SessionModel]):
     model = SessionModel
-    session_maker = async_session_maker
+    session_maker = manager_async_session_maker
 
 
-class AttractionService(BaseService[AttractionModel]):
+class SessionServiceForAdmin(BaseService[SessionModel]):
+    model = SessionModel
+    session_maker = admin_async_session_maker
+
+
+class AttractionServiceForUser(BaseService[AttractionModel]):
     model = AttractionModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class TagService(BaseService[TagModel]):
+class AttractionServiceForManager(BaseService[AttractionModel]):
+    model = AttractionModel
+    session_maker = manager_async_session_maker
+
+
+class TagServiceForUser(BaseService[TagModel]):
     model = TagModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class AttractionTagService(BaseService[AttractionTagModel]):
+class AttractionTagServiceForUser(BaseService[AttractionTagModel]):
     model = AttractionTagModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class AgeService(BaseService[AttractionModel]):
+class AgeServiceForUser(BaseService[AttractionModel]):
     model = AgeModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class AttractionAgeService(BaseService[AttractionAgeModel]):
+class AttractionAgeServiceForUser(BaseService[AttractionAgeModel]):
     model = AttractionAgeModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class LocationService(BaseService[LocationModel]):
+class LocationServiceForUser(BaseService[LocationModel]):
     model = LocationModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class AttractionTicketService(BaseService[AttractionTicketModel]):
+class AttractionTicketServiceForUser(BaseService[AttractionTicketModel]):
     model = AttractionTicketModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class EventService(BaseService[EventModel]):
+class AttractionTicketServiceForAdmin(BaseService[AttractionTicketModel]):
+    model = AttractionTicketModel
+    session_maker = admin_async_session_maker
+
+
+class EventServiceForUser(BaseService[EventModel]):
     model = EventModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class EventTicketService(BaseService[EventTicketModel]):
+class EventTicketServiceForUser(BaseService[EventTicketModel]):
     model = EventTicketModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class RestaurantService(BaseService[RestaurantModel]):
+class EventTicketServiceForAdmin(BaseService[EventTicketModel]):
+    model = EventTicketModel
+    session_maker = admin_async_session_maker
+
+
+
+class RestaurantServiceForUser(BaseService[RestaurantModel]):
     model = RestaurantModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class RestaurantCuisineService(BaseService[RestaurantCuisineModel]):
+class RestaurantCuisineServiceForUser(BaseService[RestaurantCuisineModel]):
     model = RestaurantCuisineModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class RestaurantPhotoService(BaseService[RestaurantPhotoModel]):
+class RestaurantPhotoServiceForUser(BaseService[RestaurantPhotoModel]):
     model = RestaurantPhotoModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class CuisineService(BaseService[CuisineModel]):
+class CuisineServiceForUser(BaseService[CuisineModel]):
     model = CuisineModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class AttractionReviewService(BaseService[AttractionReviewModel]):
+class AttractionReviewServiceForUser(BaseService[AttractionReviewModel]):
     model = AttractionReviewModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
 
 
-class RestaurantTableBookingService(BaseService[RestaurantTableBookingModel]):
+class AttractionReviewServiceForAdmin(BaseService[AttractionReviewModel]):
+    model = AttractionReviewModel
+    session_maker = admin_async_session_maker
+
+
+
+class RestaurantTableBookingServiceForUser(BaseService[RestaurantTableBookingModel]):
     model = RestaurantTableBookingModel
-    session_maker = async_session_maker
+    session_maker = user_async_session_maker
+
+
+class RestaurantTableBookingServiceForAdmin(BaseService[RestaurantTableBookingModel]):
+    model = RestaurantTableBookingModel
+    session_maker = admin_async_session_maker
+
+
+class LoggingServiceForAdmin(BaseService[LoggingModel]):
+    model = LoggingModel
+    session_maker = admin_async_session_maker
+
+

@@ -1,3 +1,4 @@
-from .main_services import (UserService, SessionService, AttractionService, AttractionTicketService, EventTicketService,
-                            RestaurantService, LocationService, RestaurantCuisineService, CuisineService, RestaurantPhotoService,
-                            EventService, TagService, AgeService, AttractionReviewService, RestaurantTableBookingService)
+from .main_services import (UserServiceForManager, SessionServiceForManager, AttractionServiceForUser, AttractionTicketServiceForUser, EventTicketServiceForUser,
+                            RestaurantServiceForUser, LocationServiceForUser, RestaurantCuisineServiceForUser, CuisineServiceForUser, RestaurantPhotoServiceForUser,
+                            EventServiceForUser, TagServiceForUser, AgeServiceForUser, AttractionReviewServiceForUser, RestaurantTableBookingServiceForUser,
+                            LoggingServiceForAdmin)

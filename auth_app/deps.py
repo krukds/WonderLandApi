@@ -8,7 +8,7 @@ from starlette import status
 
 from config import config
 from db import UserModel, SessionModel
-from db.services import UserService, SessionService
+from db.services import UserServiceForManager, SessionServiceForManager
 from utils import datetime_now
 from .schemes import TokenPayload
 
@@ -38,7 +38,7 @@ async def get_current_active_user(token: str = Depends(oauth2_scheme)) -> UserMo
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    session = await SessionService.select_one(
+    session = await SessionServiceForManager.select_one(
         SessionModel.access_token == token
     )
     if not session:
@@ -48,7 +48,7 @@ async def get_current_active_user(token: str = Depends(oauth2_scheme)) -> UserMo
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-    user = await UserService.select_one(
+    user = await UserServiceForManager.select_one(
         UserModel.id == session.user_id
     )
 

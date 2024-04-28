@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, NaiveDatetime
+from pydantic import BaseModel, NaiveDatetime, AwareDatetime
 
 
 class AttractionTicketPayload(BaseModel):
@@ -12,4 +12,4 @@ class AttractionTicketResponse(BaseModel):
     id: int
     title: str
     is_expired: bool
-    created_at: NaiveDatetime
+    created_at: str

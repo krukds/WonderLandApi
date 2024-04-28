@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
+        header {
+            background-color: #666;
+            padding: 8px;
+            text-align: center;
+            font-size: 25px;
+            color: white;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .nav-menu {
+            width: 15%;
+            background: #ccc;
+            padding: 50px 20px 20px;
+        }
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+        .nav-menu a:hover {
+            color: #007bff;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .scrollable-table {
+            width: 50%;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        .attractions-scrollable-table {
+            width: 80%;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        form {
+            margin-bottom: 24px;
+        }
+        label {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h3>Admin page for WonderLand</h3>
+</header>
+<div class="container">
+    <div class="nav-menu">
+        <ul>
+            <li><a href="/admin-logging">Logging</a></li>
+            <li><a style="color: white" href="/admin-info">Information</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h3>Information</h3>
+        <h4>Attraction tickets</h4>
+        <div>
+            <form id="filterFormUserIdAttractionTickets">
+                <label for="userIdInputAttractionTickets">User ID:</label>
+                <input type="text" id="userIdInputAttractionTickets" name="userId">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div>
+            <form id="filterFormAttractionId">
+                <label for="attractionIdInput">Attraction ID:</label>
+                <input type="text" id="attractionIdInput" name="attractionId">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div>
+            <button onclick="exportTableToXML('attractionTicketsTable')">Export to XML</button>
+            <button onclick="exportTableToJSON('attractionTicketsTable')">Export to JSON</button>
+        </div>
+        <div class="scrollable-table">
+            <table id="attractionTicketsTable">
+                <thead>
+                <tr>
+                    <th data-sort="asc" id="firstColumnHeaderAttractionTickets">Ticket ID ▼</th>
+                    <th scope="col">Attraction ID</th>
+                    <th scope="col">User ID</th>
+                    <th scope="col">Is Expired</th>
+                    <th data-sort="asc" id="fifthColumnHeaderAttractionTickets">Created At ▲</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for attraction_ticket in attraction_tickets %}
+                <tr>
+                    <td>{{ attraction_ticket.id }}</td>
+                    <td>{{ attraction_ticket.attraction_id }}</td>
+                    <td>{{ attraction_ticket.user_id }}</td>
+                    <td>{{ attraction_ticket.is_expired }}</td>
+                    <td>{{ attraction_ticket.created_at }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Event tickets</h4>
+        <div>
+            <form id="filterFormUserIdEventTickets">
+                <label for="userIdInputEventTickets">User ID:</label>
+                <input type="text" id="userIdInputEventTickets" name="userId">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div>
+            <form id="filterFormEventId">
+                <label for="eventIdInput">Event ID:</label>
+                <input type="text" id="eventIdInput" name="eventId">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div>
+            <button onclick="exportTableToXML('eventTicketsTable')">Export to XML</button>
+            <button onclick="exportTableToJSON('eventTicketsTable')">Export to JSON</button>
+        </div>
+        <div class="scrollable-table">
+            <table id="eventTicketsTable">
+                <thead>
+                <tr>
+                    <th data-sort="asc" id="firstColumnHeaderEventTickets">Ticket ID ▼</th>
+                    <th scope="col">Event ID</th>
+                    <th scope="col">User ID</th>
+                    <th scope="col">Is Expired</th>
+                    <th data-sort="asc" id="fifthColumnHeaderEventTickets">Created At ▲</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for event_ticket in event_tickets %}
+                <tr>
+                    <td>{{ event_ticket.id }}</td>
+                    <td>{{ event_ticket.event_id }}</td>
+                    <td>{{ event_ticket.user_id }}</td>
+                    <td>{{ event_ticket.is_expired }}</td>
+                    <td>{{ event_ticket.created_at }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h4>Attractions</h4>
+        <div>
+            <button onclick="exportTableToXML('attractionsTable')">Export to XML</button>
+            <button onclick="exportTableToJSON('attractionsTable')">Export to JSON</button>
+        </div>
+        <div class="attractions-scrollable-table">
+            <table id="attractionsTable">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Location</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Price</th>
+                    <th>Duration (min)</th>
+                    <th>Min Height (m)</th>
+                    <th>Photo</th>
+                    <th>Tags</th>
+                    <th>Ages</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for attraction in attractions %}
+                <tr>
+                    <td>{{ attraction.id }}</td>
+                    <td>{{ attraction.location }}</td>
+                    <td>{{ attraction.name }}</td>
+                    <td>{{ attraction.description }}</td>
+                    <td>${{ attraction.price }}</td>
+                    <td>{{ attraction.duration }}</td>
+                    <td>{{ attraction.minimum_height }} m</td>
+                    <td>
+                        <img src="{{ attraction.photo_url }}" alt="Photo of {{ attraction.name }}" style="width:100px; height:auto;">
+                    </td>
+                    <td>{{ attraction.tags }}</td>
+                    <td>{{ attraction.ages }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        setupTableInteraction('attractionTicketsTable', 'filterFormUserIdAttractionTickets', 'filterFormAttractionId');
+        setupTableInteraction('eventTicketsTable', 'filterFormUserIdEventTickets', 'filterFormEventId');
+    });
+
+    function setupTableInteraction(tableId, userIdFormId, attractionIdFormId) {
+        const table = document.getElementById(tableId);
+        const userIdForm = document.getElementById(userIdFormId);
+        const attractionIdForm = document.getElementById(attractionIdFormId);
+
+        userIdForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const userId = this.querySelector('input').value;
+            filterTable(table, 2, userId); // Adjusted for correct column index
+        });
+
+        attractionIdForm.addEventListener('submit', function(event) {
+            event.preventDefault();
+            const attractionId = this.querySelector('input').value;
+            filterTable(table, 1, attractionId); // Adjusted for correct column index
+        });
+
+        // Set up sorting on column headers
+        const headers = table.querySelectorAll('th[data-sort]');
+        headers.forEach(header => {
+            header.addEventListener('click', function() {
+                const columnIndex = Array.from(table.querySelectorAll('th')).indexOf(this);
+                sortColumn(table, columnIndex);
+            });
+        });
+
+        // Default sort on the first column
+        sortColumn(table, 0);
+    }
+
+    function sortColumn(table, columnIndex) {
+        const header = table.querySelectorAll('th')[columnIndex];
+        const direction = header.getAttribute('data-sort');
+        const rows = Array.from(table.querySelectorAll('tbody tr'));
+        const sortedRows = rows.sort((a, b) => {
+            let aValue = a.children[columnIndex].textContent.trim();
+            let bValue = b.children[columnIndex].textContent.trim();
+
+            // Check if the values are numeric and convert them
+            if (!isNaN(aValue) && !isNaN(bValue)) {
+                aValue = parseFloat(aValue);
+                bValue = parseFloat(bValue);
+            }
+
+            // Adjust sorting logic for numeric values
+            if (direction === 'asc') {
+                return aValue > bValue ? 1 : -1;
+            } else {
+                return aValue < bValue ? 1 : -1;
+            }
+        });
+        const tbody = table.querySelector('tbody');
+        tbody.innerHTML = '';
+        sortedRows.forEach(row => tbody.appendChild(row));
+        toggleDirection(header);
+    }
+
+    function toggleDirection(header) {
+        const currentDirection = header.getAttribute('data-sort');
+        header.setAttribute('data-sort', currentDirection === 'asc' ? 'desc' : 'asc');
+        header.textContent = header.textContent.includes('▲') ? header.textContent.replace('▲', '▼') : header.textContent.replace('▼', '▲');
+    }
+
+
+    function filterTable(table, columnIndex, value) {
+        const rows = table.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            const cell = row.children[columnIndex];
+            row.style.display = (cell.textContent === value || value === '') ? '' : 'none';
+        });
+    }
+
+    function downloadFile(content, fileName, mimeType) {
+        const a = document.createElement('a');
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        a.href = url;
+        a.download = fileName;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function cleanHeader(header) {
+        return header.textContent.replace(/▲|▼/g, '').trim();
+    }
+
+    function exportTableToJSON(tableId) {
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.querySelectorAll('tr'));
+        const headers = Array.from(rows.shift().querySelectorAll('th')).map(cleanHeader);
+        const data = rows.map(row => {
+            const cells = row.querySelectorAll('td');
+            let obj = {};
+            cells.forEach((cell, index) => {
+                let cellData = cell.textContent.trim();  // Очищення даних від пробілів
+                if (cell.querySelector('img')) {  // Якщо в клітинці є зображення
+                    cellData = cell.querySelector('img').src;  // Використання URL зображення
+                }
+                obj[headers[index]] = cellData;
+            });
+            return obj;
+        });
+
+        const json = JSON.stringify(data, null, 4);
+        downloadFile(json, tableId + '.json', 'application/json');
+    }
+
+    function exportTableToXML(tableId) {
+        const table = document.getElementById(tableId);
+        const rows = Array.from(table.querySelectorAll('tr'));
+        const headers = Array.from(rows.shift().querySelectorAll('th')).map(th => th.textContent.replace(/▲|▼/g, '').trim());
+        let xml = '<?xml version="1.0" encoding="UTF-8"?>\n<table>\n';
+
+        rows.forEach(row => {
+            xml += '  <row>\n';
+            row.querySelectorAll('td').forEach((td, index) => {
+                let cellData = td.textContent.trim();
+                if (td.querySelector('img')) {
+                    cellData = td.querySelector('img').src;
+                }
+                xml += `    <${headers[index]}>${cellData}</${headers[index]}>\n`;
+            });
+            xml += '  </row>\n';
+        });
+        xml += '</table>\n';
+
+        downloadFile(xml, tableId + '.xml', 'text/xml');
+    }
+
+
+
+
+</script>
+</body>
+</html>

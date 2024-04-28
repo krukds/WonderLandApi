@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background-color: #666;
+            padding: 8px;
+            text-align: center;
+            font-size: 25px;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .content {
+            float: left;
+            padding: 20px;
+            width: 85%;
+            background-color: #f1f1f1;
+        }
+
+        .nav-menu {
+            float: left;
+            width: 15%;
+            background: #ccc;
+            padding: 50px 20px 20px;
+        }
+
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-menu a:hover {
+            color: #007bff;
+        }
+
+
+        .form-container {
+            display: flex;
+            align-items: center;
+        }
+        .form-container h3 {
+            margin-right: 10px; /* Додає відступ справа до заголовка */
+        }
+        .form-container form {
+            display: flex; /* Забезпечує горизонтальне розташування елементів форми */
+            align-items: center; /* Вирівнює елементи по центру по вертикалі */
+        }
+        form label, form button {
+            margin-right: 10px; /* Відступи між елементами форми */
+        }
+        .chart-container {
+            width: 40%;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h3>Statistics for WonderLand</h3>
+</header>
+<div class="container">
+    <div class="nav-menu">
+        <ul>
+            <li><a style="color: white" href="/statistic-attractions">Statistics for attractions</a></li>
+            <li><a href="/statistic-restaurants">Statistics for restaurants</a></li>
+            <li><a href="/statistic-users">Statistics for users</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>Statistics for attractions</h1>
+        <div class="form-container">
+            <h3>Attractions for which the most tickets are bought during the year:</h3>
+            <form onsubmit="fetchData(event, 'year')">
+                <label>
+                    <select id="year-select-statistic-for-year">
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024" selected>2024</option>
+                    </select>
+                </label>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+        <div class="chart-container">
+            <canvas id="attractionChartForYear"></canvas>
+        </div>
+
+        <div class="form-container">
+            <h3>Attractions for which the most tickets are bought during the month:</h3>
+            <form onsubmit="fetchData(event, 'month')">
+                <label>
+                    <select id="month-select-statistic-for-month">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </label>
+                <h3>in year: </h3>
+                <label>
+                    <select id="year-select-statistic-for-month">
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024" selected>2024</option>
+                    </select>
+                </label>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+        <div class="chart-container">
+            <canvas id="attractionChartForMonth"></canvas>
+        </div>
+
+        <div class="form-container">
+            <h3>Attractions for which the most tickets are bought during the day:</h3>
+            <form onsubmit="fetchData(event, 'day')">
+                <label>
+                    <select id="day-select-statistic-for-day">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>
+                        <option value="29">29</option>
+                        <option value="30">30</option>
+                        <option value="31">31</option>
+                    </select>
+                </label>
+                <h3>in month: </h3>
+                <label>
+                    <select id="month-select-statistic-for-day">
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+                    </select>
+                </label>
+                <h3>in year: </h3>
+                <label>
+                    <select id="year-select-statistic-for-day">
+                        <option value="2020">2020</option>
+                        <option value="2021">2021</option>
+                        <option value="2022">2022</option>
+                        <option value="2023">2023</option>
+                        <option value="2024" selected>2024</option>
+                    </select>
+                </label>
+                <button type="submit">Calculate</button>
+            </form>
+        </div>
+        <div class="chart-container">
+            <canvas id="attractionChartForDay"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchData(event, type) {
+        if (event) event.preventDefault(); // Запобігає стандартній поведінці форми, якщо подія є
+        let endpoint = 'attraction-tickets-for-period';
+        switch (type) {
+            case 'year':
+                const yearForYear = document.getElementById('year-select-statistic-for-year').value;
+                const responseForYear = await fetch(`/api/statistics/${endpoint}/?year=${yearForYear}`);
+                const dataForYear = await responseForYear.json();
+                renderChart('attractionChartForYear', dataForYear);
+                break;
+            case 'month':
+                const monthForMonth = document.getElementById('month-select-statistic-for-month').value;
+                const yearForMonth = document.getElementById('year-select-statistic-for-month').value;
+                const responseForMonth = await fetch(`/api/statistics/${endpoint}/?month=${monthForMonth}&year=${yearForMonth}`);
+                const dataForMonth = await responseForMonth.json();
+                renderChart('attractionChartForMonth', dataForMonth);
+                break;
+            case 'day':
+                const dayForDay = document.getElementById('day-select-statistic-for-day').value;
+                const monthForDay = document.getElementById('month-select-statistic-for-day').value;
+                const yearForDay = document.getElementById('year-select-statistic-for-day').value;
+                const responseForDay = await fetch(`/api/statistics/${endpoint}/?day=${dayForDay}&month=${monthForDay}&year=${yearForDay}`);
+                const dataForDay = await responseForDay.json();
+                renderChart('attractionChartForDay', dataForDay);
+                break;
+            default:
+                break;
+        }
+    }
+
+    function renderChart(canvasId, data) {
+        const attractions = data.map(item => item.attraction_name);
+        const counts = data.map(item => item.ticket_count);
+
+        if (window.myCharts && window.myCharts[canvasId]) {
+            window.myCharts[canvasId].data.labels = attractions;
+            window.myCharts[canvasId].data.datasets[0].data = counts;
+            window.myCharts[canvasId].update(); // Оновлення графіка з новими даними
+        } else {
+            window.myCharts = window.myCharts || {}; // Ініціалізація об'єкту, якщо він ще не існує
+
+            const ctx = document.getElementById(canvasId).getContext('2d');
+
+            window.myCharts[canvasId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: attractions,
+                    datasets: [{
+                        label: '',
+                        data: counts,
+                        backgroundColor: '#99ccff',
+                        borderColor: '#99ccff',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Attractions'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Number of Tickets Sold'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    let label = context.dataset.label || '';
+                                    if (context.parsed.y !== null) {
+                                        label += `: ${context.parsed.y} tickets`;
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => fetchData(null, 'year'));
+    document.addEventListener('DOMContentLoaded', () => fetchData(null, 'month'));
+    document.addEventListener('DOMContentLoaded', () => fetchData(null, 'day'));
+</script>
+</body>
+</html>

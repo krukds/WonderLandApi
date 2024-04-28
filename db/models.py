@@ -1,5 +1,7 @@
+from datetime import datetime
+
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Float, CheckConstraint, Boolean, Date, \
-    UniqueConstraint, Time
+    UniqueConstraint, Time, Text
 from sqlalchemy.orm import relationship, Mapped
 
 from db.base import Base
@@ -174,3 +176,12 @@ class RestaurantTableBookingModel(Base):
     table_id = Column(Integer, ForeignKey('restaurant_table.id'), nullable=False)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     date_time = Column(DateTime, nullable=False)
+
+
+class LoggingModel(Base):
+    __tablename__ = 'logging'
+
+    id = Column(Integer, primary_key=True)
+    role = Column(String(255), nullable=False)
+    log_time = Column(DateTime, default=datetime.utcnow())
+    action_text = Column(Text, nullable=False)

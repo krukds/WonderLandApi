@@ -3,11 +3,25 @@ from sqlalchemy.orm import declarative_base
 
 from config import config
 
-DATABASE_URL = f"postgresql+asyncpg://{config.DB_USER}:{config.DB_PASS.get_secret_value()}@{config.DB_HOST}:{config.DB_PORT}/{config.DB_NAME}"
+# Адмін
+ADMIN_DATABASE_URL = f"postgresql+asyncpg://admin:admin1pass@{config.DB_HOST}:{config.DB_PORT}/{config.DB_NAME}"
+admin_engine = create_async_engine(ADMIN_DATABASE_URL)
+admin_async_session_maker = async_sessionmaker(admin_engine, class_=AsyncSession, expire_on_commit=False)
 
-engine = create_async_engine(DATABASE_URL)
+# Користувач
+USER_DATABASE_URL = f"postgresql+asyncpg://{config.DB_USER}:{config.DB_PASS.get_secret_value()}@{config.DB_HOST}:{config.DB_PORT}/{config.DB_NAME}"
+user_engine = create_async_engine(USER_DATABASE_URL)
+user_async_session_maker = async_sessionmaker(user_engine, class_=AsyncSession, expire_on_commit=False)
 
-async_session_maker = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
+# Менеджер
+MANAGER_DATABASE_URL = f"postgresql+asyncpg://manager:manager2pass@{config.DB_HOST}:{config.DB_PORT}/{config.DB_NAME}"
+manager_engine = create_async_engine(MANAGER_DATABASE_URL)
+manager_async_session_maker = async_sessionmaker(manager_engine, class_=AsyncSession, expire_on_commit=False)
+
+# Аналітик
+ANALYST_DATABASE_URL = f"postgresql+asyncpg://analyst:analyst3pass@{config.DB_HOST}:{config.DB_PORT}/{config.DB_NAME}"
+analyst_engine = create_async_engine(ANALYST_DATABASE_URL)
+analyst_async_session_maker = async_sessionmaker(analyst_engine, class_=AsyncSession, expire_on_commit=False)
 
 base = declarative_base()
 

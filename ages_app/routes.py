@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from starlette.status import HTTP_404_NOT_FOUND
 
 
-from db.services import AgeService
+from db.services import AgeServiceForUser
 from .schemes import AgeResponse
 
 router = APIRouter(
@@ -14,7 +14,7 @@ router = APIRouter(
 @router.get("")
 async def get_all_ages(
 ) -> list[AgeResponse]:
-    ages = await AgeService.select()
+    ages = await AgeServiceForUser.select()
     if not ages:
         raise HTTPException(status_code=HTTP_404_NOT_FOUND, detail="No ages found")
 

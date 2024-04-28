@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin page</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background-color: #666;
+            padding: 8px;
+            text-align: center;
+            font-size: 25px;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .content {
+            float: left;
+            padding: 20px;
+            width: 85%;
+            background-color: #f1f1f1;
+        }
+
+        .nav-menu {
+            float: left;
+            width: 15%;
+            background: #ccc;
+            padding: 50px 20px 20px;
+        }
+
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-menu a:hover {
+            color: #007bff;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 24px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin-bottom: 24px;
+        }
+
+        label {
+            margin-right: 8px;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <h3>Admin page for WonderLand</h3>
+</header>
+
+<div class="container">
+    <div class="nav-menu">
+        <ul>
+            <li><a style="color: white" href="/admin-logging">Logging</a></li>
+            <li><a href="/admin-info">Information</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h3>Logging</h3>
+        <form id="date-range-form">
+            <label for="start-date">Start Date:</label>
+            <input type="date" id="start-date" name="start-date">
+
+            <label for="end-date">End Date:</label>
+            <input type="date" id="end-date" name="end-date">
+
+            <button type="submit">Filter</button>
+        </form>
+        <table id="logging-table">
+            <thead>
+            <tr>
+                <th>Role</th>
+                <th>Log Time</th>
+                <th>Action Text</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Table body will be filled dynamically with JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', loadAndFilterLogs);
+
+document.getElementById('date-range-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    loadAndFilterLogs();
+});
+
+function loadAndFilterLogs() {
+    const startDate = document.getElementById('start-date').value;
+    const endDate = document.getElementById('end-date').value;
+
+    fetch(`/api/logging`)
+        .then(response => response.json())
+        .then(data => {
+            let filteredData = data;
+            if (startDate && endDate) {
+                filteredData = data.filter(log => {
+                    const logDate = new Date(log.log_time).toISOString().split('T')[0];
+                    return logDate >= startDate && logDate <= endDate;
+                });
+            }
+
+            const tableBody = document.querySelector('#logging-table tbody');
+            tableBody.innerHTML = ''; // Очищення таблиці перед додаванням нових даних
+            filteredData.forEach(log => {
+                const row = `
+                <tr>
+                    <td>${log.role}</td>
+                    <td>${new Date(log.log_time).toLocaleString()}</td>
+                    <td>${log.action_text}</td>
+                </tr>
+            `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching logging data:', error);
+        });
+}
+
+</script>
+</body>
+</html>

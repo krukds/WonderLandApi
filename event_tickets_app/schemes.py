@@ -12,4 +12,4 @@ class EventTicketResponse(BaseModel):
     id: int
     title: str
     is_expired: bool
-    created_at: NaiveDatetime
+    created_at: str

@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Statistics</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+        }
+
+        header {
+            background-color: #666;
+            padding: 8px;
+            text-align: center;
+            font-size: 25px;
+            color: white;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+
+        }
+
+        .content {
+            float: left;
+            padding: 20px;
+            width: 85%;
+            background-color: #f1f1f1;
+        }
+
+        .nav-menu {
+            float: left;
+            width: 15%;
+            background: #ccc;
+            padding: 50px 20px 20px;
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .nav-menu li {
+            margin-bottom: 10px;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .nav-menu a:hover {
+            color: #007bff;
+        }
+
+        .chart-container {
+            width: 40%;
+            height: 300px;
+        }
+
+    </style>
+</head>
+<body>
+<header>
+    <h3>Statistics for WonderLand</h3>
+</header>
+<div class="container">
+    <div class="nav-menu">
+        <ul>
+            <li><a href="/statistic-attractions">Statistics for attractions</a></li>
+            <li><a href="/statistic-restaurants">Statistics for restaurants</a></li>
+            <li><a style="color: white" href="/statistic-users">Statistics for users</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1>Statistics for users</h1>
+        <div class="chart-container">
+            <canvas id="userChartHourlyVisits"></canvas>
+        </div>
+        <div class="chart-container">
+            <canvas id="userChartDailyVisits"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function fetchWeekdayData() {
+        const response = await fetch("/api/statistics/get_weekday_visits");
+        return await response.json();
+    }
+
+    async function fetchHourlyData() {
+        const response = await fetch("/api/statistics/get_hourly_visits");
+        return await response.json();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        const weekdayData = await fetchWeekdayData();
+        const hourlyData = await fetchHourlyData();
+        renderWeekdayChart(weekdayData);
+        renderHourlyChart(hourlyData);
+    });
+
+    function renderWeekdayChart(data) {
+        const weekdays = data.map(item => item.weekday);
+        const visits = data.map(item => item.visits_count);
+
+        const ctx = document.getElementById('userChartDailyVisits').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: weekdays,
+                datasets: [{
+                    label: 'Visits per day',
+                    data: visits,
+                    backgroundColor: '#99ccff',
+                    borderColor: '#99ccff',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    function renderHourlyChart(data) {
+        const hours = data.map(item => item.hour);
+        const visits = data.map(item => item.visits_count);
+
+        const ctx = document.getElementById('userChartHourlyVisits').getContext('2d');
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: hours,
+                datasets: [{
+                    label: 'Visits per hour',
+                    data: visits,
+                    backgroundColor: '#ffcc99',
+                    borderColor: '#ffcc99',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+</script>
+</body>
+</html>

@@ -4,7 +4,7 @@ from jose import jwt
 
 from config import config
 from db import UserModel, SessionModel
-from db.services import SessionService
+from db.services import SessionServiceForManager
 from utils import datetime_now, timestamp_now
 
 
@@ -43,5 +43,5 @@ async def create_user_session(user_id: int) -> SessionModel:
         access_token=create_access_token(user_id, access_token_expires_at),
         expires_at=access_token_expires_at
     )
-    await SessionService.save(session)
+    await SessionServiceForManager.save(session)
     return session
